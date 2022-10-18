@@ -38,8 +38,8 @@ function polymc_git {
 
 currentDate=$(date --iso-8601)
 
-upstream_git reset --hard HEAD || exit 1
-upstream_git checkout "${BRANCH}" || exit 1
+#upstream_git reset --hard HEAD || exit 1
+#upstream_git checkout "${BRANCH}" || exit 1
 
 python updateMojang.py || fail_in
 python updateForge.py || fail_in
