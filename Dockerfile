@@ -2,7 +2,12 @@ FROM python:3.10.2-bullseye
 ARG UID=1337
 ARG GID=1337
 
+<<<<<<< HEAD
 RUN pip3 install cachecontrol requests lockfile pydantic
+=======
+RUN pip install cachecontrol requests lockfile packaging pydantic \
+    && apt-get update && apt-get install -y rsync cron
+>>>>>>> 9098cb1 (fix: update dependencies)
 
 # add our cronjob
 COPY docker/update.cron /etc/cron.d/meta-update
