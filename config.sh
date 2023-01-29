@@ -1,7 +1,7 @@
 export UPSTREAM_DIR=upstream
 export UPSTREAM_REPO=git@github.com:FoxStudios/meta-upstream.git
-export PMC_DIR=polymc
-export PMC_REPO=git@github.com:FoxStudios/meta-polymc.git
+export LAUNCHER_DIR=polymc
+export LAUNCHER_REPO=git@github.com:FoxStudios/meta-polymc.git
 export BRANCH_master=master
 export BRANCH_develop=develop
 export DEPLOY_TO_S3=false

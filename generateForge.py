@@ -5,7 +5,7 @@ from distutils.version import LooseVersion
 from operator import attrgetter
 from typing import Collection
 
-from meta.common import ensure_component_dir, polymc_path, upstream_path, static_path
+from meta.common import ensure_component_dir, launcher_path, upstream_path, static_path
 from meta.common.forge import FORGE_COMPONENT, INSTALLER_MANIFEST_DIR, VERSION_MANIFEST_DIR, DERIVED_INDEX_FILE, \
     STATIC_LEGACYINFO_FILE, INSTALLER_INFO_DIR, BAD_VERSIONS, FORGEWRAPPER_MAVEN
 from meta.common.mojang import MINECRAFT_COMPONENT
@@ -15,7 +15,7 @@ from meta.model.forge import ForgeVersion, ForgeInstallerProfile, ForgeLegacyInf
     ForgeInstallerProfileV2, InstallerInfo, DerivedForgeIndex, ForgeLegacyInfoList
 from meta.model.mojang import MojangVersion
 
-PMC_DIR = polymc_path()
+LAUNCHER_DIR = launcher_path()
 UPSTREAM_DIR = upstream_path()
 STATIC_DIR = static_path()
 
@@ -26,14 +26,14 @@ def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
 
-# Contruct a set of libraries out of a Minecraft version file, for filtering.
+# Construct a set of libraries out of a Minecraft version file, for filtering.
 mc_version_cache = {}
 
 
 def load_mc_version_filter(version: str):
     if version in mc_version_cache:
         return mc_version_cache[version]
-    v = MetaVersion.parse_file(os.path.join(PMC_DIR, MINECRAFT_COMPONENT, f"{version}.json"))
+    v = MetaVersion.parse_file(os.path.join(LAUNCHER_DIR, MINECRAFT_COMPONENT, f"{version}.json"))
     libs = set(map(attrgetter("name"), v.libraries))
     mc_version_cache[version] = libs
     return libs
@@ -98,7 +98,7 @@ def version_from_profile(profile: ForgeInstallerProfile, version: ForgeVersion) 
                 overridden_name.classifier = "universal"
 
         overridden_lib = Library(name=overridden_name)
-        if forge_lib.url == "http://files.minecraftforge.net/maven/":
+        if forge_lib.url == "http://maven.minecraftforge.net/":
             overridden_lib.url = "https://maven.minecraftforge.net/"
         else:
             overridden_lib.url = forge_lib.url
@@ -143,7 +143,7 @@ def version_from_modernized_installer(installer: MojangVersion, version: ForgeVe
                 overridden_name = forge_lib.name
                 overridden_name.classifier = "universal"
                 forge_lib.downloads.artifact.path = overridden_name.path()
-                forge_lib.downloads.artifact.url = "https://files.minecraftforge.net/maven/%s" % overridden_name.path()
+                forge_lib.downloads.artifact.url = "https://maven.minecraftforge.net/%s" % overridden_name.path()
                 forge_lib.name = overridden_name
 
             elif forge_lib.name.artifact == "minecraftforge":
@@ -152,7 +152,7 @@ def version_from_modernized_installer(installer: MojangVersion, version: ForgeVe
                 overridden_name.classifier = "universal"
                 overridden_name.version = "%s-%s" % (mc_version, overridden_name.version)
                 forge_lib.downloads.artifact.path = overridden_name.path()
-                forge_lib.downloads.artifact.url = "https://files.minecraftforge.net/maven/%s" % overridden_name.path()
+                forge_lib.downloads.artifact.url = "https://maven.minecraftforge.net/%s" % overridden_name.path()
                 forge_lib.name = overridden_name
 
         v.libraries.append(forge_lib)
@@ -198,7 +198,7 @@ def version_from_build_system_installer(installer: MojangVersion, profile: Forge
         name=GradleSpecifier("net.minecraftforge", "forge", version.long_version, "installer"))
     installer_lib.downloads = MojangLibraryDownloads()
     installer_lib.downloads.artifact = MojangArtifact(
-        url="https://files.minecraftforge.net/maven/%s" % (installer_lib.name.path()),
+        url="https://maven.minecraftforge.net/%s" % (installer_lib.name.path()),
         sha1=info.sha1hash,
         size=info.size)
     v.maven_files.append(installer_lib)
@@ -210,7 +210,7 @@ def version_from_build_system_installer(installer: MojangVersion, profile: Forge
 
         if forge_lib.name.group == "net.minecraftforge" and forge_lib.name.artifact == "forge" \
                 and forge_lib.name.classifier == "universal":
-            forge_lib.downloads.artifact.url = "https://files.minecraftforge.net/maven/%s" % forge_lib.name.path()
+            forge_lib.downloads.artifact.url = "https://maven.minecraftforge.net/%s" % forge_lib.name.path()
         v.maven_files.append(forge_lib)
 
     v.libraries = []
@@ -231,7 +231,7 @@ def version_from_build_system_installer(installer: MojangVersion, profile: Forge
             if forge_lib.name.artifact == "forge":
                 forge_lib.name.classifier = "launcher"
                 forge_lib.downloads.artifact.path = forge_lib.name.path()
-                forge_lib.downloads.artifact.url = "https://files.minecraftforge.net/maven/%s" % forge_lib.name.path()
+                forge_lib.downloads.artifact.url = "https://maven.minecraftforge.net/%s" % forge_lib.name.path()
                 forge_lib.name = forge_lib.name
         v.libraries.append(forge_lib)
 
@@ -321,7 +321,7 @@ def main():
             recommended_versions.append(version.rawVersion)
 
         # If we do not have the corresponding Minecraft version, we ignore it
-        if not os.path.isfile(os.path.join(PMC_DIR, MINECRAFT_COMPONENT, f"{version.mc_version_sane}.json")):
+        if not os.path.isfile(os.path.join(LAUNCHER_DIR, MINECRAFT_COMPONENT, f"{version.mc_version_sane}.json")):
             eprint("Skipping %s with no corresponding Minecraft version %s" % (key, version.mc_version_sane))
             continue
 
@@ -357,7 +357,7 @@ def main():
 
                 v = version_from_legacy(legacy_info_list.number[str(build)], version)
 
-        v.write(os.path.join(PMC_DIR, FORGE_COMPONENT, f"{v.version}.json"))
+        v.write(os.path.join(LAUNCHER_DIR, FORGE_COMPONENT, f"{v.version}.json"))
 
         recommended_versions.sort()
 
@@ -365,7 +365,7 @@ def main():
 
         package = MetaPackage(uid=FORGE_COMPONENT, name="Forge", project_url="https://www.minecraftforge.net/forum/")
         package.recommended = recommended_versions
-        package.write(os.path.join(PMC_DIR, FORGE_COMPONENT, "package.json"))
+        package.write(os.path.join(LAUNCHER_DIR, FORGE_COMPONENT, "package.json"))
 
 
 if __name__ == '__main__':

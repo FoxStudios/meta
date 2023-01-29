@@ -8,10 +8,9 @@ from . import MetaBase, MojangArtifactBase, MojangAssets, MojangLibrary, MojangA
 
 SUPPORTED_LAUNCHER_VERSION = 21
 SUPPORTED_COMPLIANCE_LEVEL = 1
-DEFAULT_JAVA_MAJOR = 8  # by default we should recommend Java 8 if we don't know better
+DEFAULT_JAVA_MAJOR = 8  # By default, we should recommend Java 8 if we don't know better
 COMPATIBLE_JAVA_MAPPINGS = {
-    16: [17, 18, 19],
-    17: [18, 19]
+    16: [17]
 }
 
 '''
@@ -79,11 +78,31 @@ class ExperimentIndexWrap:
         self.versions: Dict[str, ExperimentEntry] = dict((x.id, x) for x in index.experiments)
 
 
+class OldSnapshotEntry(MetaBase):
+    id: str
+    url: str
+    wiki: Optional[str]
+    jar: str
+    sha1: str
+    size: int
+
+
+class OldSnapshotIndex(MetaBase):
+    old_snapshots: List[OldSnapshotEntry]
+
+
+class OldSnapshotIndexWrap:
+    def __init__(self, index: OldSnapshotIndex):
+        self.index: OldSnapshotIndex = index
+        self.versions: Dict[str, OldSnapshotEntry] = dict((x.id, x) for x in index.old_snapshots)
+
+
 class LegacyOverrideEntry(MetaBase):
     main_class: Optional[str] = Field(alias="mainClass")
     applet_class: Optional[str] = Field(alias="appletClass")
     release_time: Optional[datetime] = Field(alias="releaseTime")
     additional_traits: Optional[List[str]] = Field(alias="+traits")
+    additional_jvm_args: Optional[List[str]] = Field(alias="+jvmArgs")
 
     def apply_onto_meta_version(self, meta_version: MetaVersion, legacy: bool = True):
         # simply hard override classes
@@ -98,6 +117,11 @@ class LegacyOverrideEntry(MetaBase):
             if not meta_version.additional_traits:
                 meta_version.additional_traits = []
             meta_version.additional_traits += self.additional_traits
+
+        if self.additional_jvm_args:
+            if not meta_version.additional_jvm_args:
+                meta_version.additional_jvm_args = []
+            meta_version.additional_jvm_args += self.additional_jvm_args
 
         if legacy:
             # remove all libraries - they are not needed for legacy

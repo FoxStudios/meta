@@ -109,7 +109,7 @@
     }
   },
   {
-    "_comment": "Use a newer version on osx-arm64, linux-arm64, and linux-arm32",
+    "_comment": "Use a newer version on osx-arm64",
     "match": [
       "com.mojang:text2speech:1.0.10",
       "com.mojang:text2speech:1.5",
@@ -131,18 +131,6 @@
           "os": {
             "name": "osx-arm64"
           }
-        },
-        {
-          "action": "disallow",
-          "os": {
-            "name": "linux-arm64"
-          }
-        },
-        {
-          "action": "disallow",
-          "os": {
-            "name": "linux-arm32"
-          }
         }
       ]
     },
@@ -162,18 +150,6 @@
             "os": {
               "name": "osx-arm64"
             }
-          },
-          {
-            "action": "allow",
-            "os": {
-              "name": "linux-arm64"
-            }
-          },
-          {
-            "action": "allow",
-            "os": {
-              "name": "linux-arm32"
-            }
           }
         ]
       }
@@ -182,7 +158,6 @@
   {
     "_comment": "Use a newer version on osx-arm64, linux-arm64, and linux-arm32",
     "match": [
-      "org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209",
       "org.lwjgl.lwjgl:lwjgl:2.9.3",
       "org.lwjgl.lwjgl:lwjgl:2.9.1-nightly-20131120",
       "org.lwjgl.lwjgl:lwjgl:2.9.1-nightly-20131017",
@@ -220,10 +195,10 @@
           "artifact": {
             "sha1": "697517568c68e78ae0b4544145af031c81082dfe",
             "size": 1047168,
-            "url": "https://github.com/theofficialgman/lwjgl3-binaries-arm64/raw/lwjgl-2.9.4/lwjgl-2.9.4-nightly-20150209.jar"
+            "url": "https://libraries.minecraft.net/org/lwjgl/lwjgl/lwjgl/2.9.4-nightly-20150209/lwjgl-2.9.4-nightly-20150209.jar"
           }
         },
-        "name": "org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209-gman64.1",
+        "name": "org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209",
         "rules": [
           {
             "action": "allow",
@@ -250,7 +225,6 @@
   {
     "_comment": "Use a newer version on osx-arm64, linux-arm64, and linux-arm32",
     "match": [
-      "org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209",
       "org.lwjgl.lwjgl:lwjgl_util:2.9.3",
       "org.lwjgl.lwjgl:lwjgl_util:2.9.1-nightly-20131120",
       "org.lwjgl.lwjgl:lwjgl_util:2.9.1-nightly-20131017",
@@ -288,10 +262,10 @@
           "artifact": {
             "sha1": "d51a7c040a721d13efdfbd34f8b257b2df882ad0",
             "size": 173887,
-            "url": "https://github.com/theofficialgman/lwjgl3-binaries-arm64/raw/lwjgl-2.9.4/lwjgl_util-2.9.4-nightly-20150209.jar"
+            "url": "https://libraries.minecraft.net/org/lwjgl/lwjgl/lwjgl_util/2.9.4-nightly-20150209/lwjgl_util-2.9.4-nightly-20150209.jar"
           }
         },
-        "name": "org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209-gman64.1",
+        "name": "org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209",
         "rules": [
           {
             "action": "allow",
@@ -587,13 +561,13 @@
           },
           "classifiers": {
             "natives-linux-arm64": {
-              "sha1": "19c7d57e1ab7fee54f35a8615babd5defc355d78",
-              "size": 156163,
-              "url": "https://github.com/theofficialgman/lwjgl3-binaries-arm64/raw/lwjgl-3.2.2/lwjgl-jemalloc-natives-linux-arm64.jar"
+              "sha1": "762d7d80c9cdf3a3f3fc80c8a5f86612255edfe0",
+              "size": 156343,
+              "url": "https://github.com/theofficialgman/lwjgl3-binaries-arm64/raw/lwjgl-3.2.2/lwjgl-jemalloc-patched-natives-linux-arm64.jar"
             }
           }
         },
-        "name": "org.lwjgl:lwjgl-jemalloc:3.2.2-gman64.1",
+        "name": "org.lwjgl:lwjgl-jemalloc:3.2.2-gman64.2",
         "natives": {
           "linux-arm64": "natives-linux-arm64"
         },
@@ -1643,12 +1617,12 @@
       {
         "downloads": {
           "artifact": {
-            "sha1": "c6606e57db075ad218a2e78d2416c159a53b6a0c",
-            "size": 157996,
-            "url": "https://build.lwjgl.org/release/3.3.1/bin/lwjgl-jemalloc/lwjgl-jemalloc-natives-linux-arm64.jar"
+            "sha1": "749be48a9b86ee2c3a2da5fd77511208adcfb33b",
+            "size": 159993,
+            "url": "https://github.com/theofficialgman/lwjgl3-binaries-arm64/raw/lwjgl-3.3.1/lwjgl-jemalloc-patched-natives-linux-arm64.jar"
           }
         },
-        "name": "org.lwjgl:lwjgl-jemalloc-natives-linux-arm64:3.3.1-lwjgl.1",
+        "name": "org.lwjgl:lwjgl-jemalloc-natives-linux-arm64:3.3.1-gman64.1",
         "rules": [
           {
             "action": "allow",

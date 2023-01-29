@@ -2,6 +2,10 @@ import os
 import datetime
 from urllib.parse import urlparse
 
+import requests
+from cachecontrol import CacheControl
+from cachecontrol.caches import FileCache
+
 
 def serialize_datetime(dt: datetime.datetime):
     if dt.tzinfo is None:
@@ -10,10 +14,10 @@ def serialize_datetime(dt: datetime.datetime):
     return dt.isoformat()
 
 
-def polymc_path():
-    if "PMC_DIR" in os.environ:
-        return os.environ["PMC_DIR"]
-    return "polymc"
+def launcher_path():
+    if "LAUNCHER_DIR" in os.environ:
+        return os.environ["LAUNCHER_DIR"]
+    return "launcher"
 
 
 def upstream_path():
@@ -35,13 +39,14 @@ def ensure_upstream_dir(path):
 
 
 def ensure_component_dir(component_id):
-    path = os.path.join(polymc_path(), component_id)
+    path = os.path.join(launcher_path(), component_id)
     if not os.path.exists(path):
         os.makedirs(path)
 
 
 def transform_maven_key(maven_key: str):
     return maven_key.replace(":", ".")
+
 
 def replace_old_launchermeta_url(url):
     o = urlparse(url)
@@ -68,3 +73,13 @@ def merge_dict(base: dict, overlay: dict):
                 overlay[k] = v
 
     return overlay
+
+
+def default_session():
+    forever_cache = FileCache('caches/http_cache', forever=True)
+    sess = CacheControl(requests.Session(), forever_cache)
+
+    sess.headers.update({"User-Agent": "PrismLauncherMeta/1.0"})
+
+    return sess
+
